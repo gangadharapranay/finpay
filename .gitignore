@@ -1,0 +1,21 @@
+# FinPay (multi-service) ignores
+
+# Build outputs
+**/target/
+**/.mvn/wrapper/maven-wrapper.jar
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Local runtime data
+postgres_data/
+
+# Logs
+*.log
+

@@ -1,0 +1,28 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: test-service
+            uri: lb://TEST
+            predicates:
+              - Path=/test/**
+          - id: payment-api-service
+            uri: lb://PAYMENT-API-SERVICE
+            predicates:
+              - Path=/api/payments/**
+          - id: account-service
+            uri: lb://ACCOUNT-SERVICE
+            predicates:
+              - Path=/api/accounts/**
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
