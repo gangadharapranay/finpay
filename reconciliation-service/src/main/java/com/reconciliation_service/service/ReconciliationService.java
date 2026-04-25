@@ -62,7 +62,7 @@ public class ReconciliationService {
         for (Payment payment : payments) {
             UUID pid = payment.getId();
 
-            // 6a️⃣ Missing saga
+            // 6.Missing saga
             PaymentSaga saga = sagaMap.get(pid);
             if (saga == null) {
                 issues.add(new ReconciliationIssue(

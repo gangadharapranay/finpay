@@ -40,7 +40,7 @@ public class PaymentProcessorService {
      *
      * We intentionally use DB locks (pessimistic write) on saga + payment rows to ensure
      * only one concurrent consumer can process a given paymentId at a time.
-     * This prevents optimistic-lock conflicts under Kafka retries/redeliveries.
+     * This prevents optimistic-lock conflicts under Kafka retries.
      */
     @Transactional
     public void processPayment(UUID paymentId, Pacs008 paymentXml) {
@@ -99,7 +99,7 @@ public class PaymentProcessorService {
             return sagaRepository.findByPaymentIdForUpdate(paymentId);
         }
 
-        // Create saga row (race-safe enough since paymentId is the PK; if two threads race, one will win)
+        // Create saga row
         sagaRepository.save(PaymentSaga.builder()
                 .paymentId(paymentId)
                 .state(SagaState.STARTED)
@@ -175,7 +175,7 @@ public class PaymentProcessorService {
             accountClient.transfer(transferRequest);
         } catch (feign.FeignException fe) {
             // Wrap FeignException in RuntimeException with readable reason
-            String reason = fe.contentUTF8();  // This is the message returned by Account service
+            String reason = fe.contentUTF8();  // message returned by Account service
             throw new RuntimeException("Account transfer failed: " + reason);
         }
     }
